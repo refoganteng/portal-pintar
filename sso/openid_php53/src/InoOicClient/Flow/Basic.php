@@ -10,7 +10,6 @@ use InoOicClient\Oic\UserInfo;
 class Basic extends AbstractFlow
 {
 
-
     /**
      * Returns the authorization request URI.
      * 
@@ -79,21 +78,30 @@ class Basic extends AbstractFlow
             $authorizationCode = $this->getAuthorizationCode();
         } catch (\Exception $e) {
             throw new Exception\AuthorizationException(
-                sprintf("Exception during authorization: [%s] %s", get_class($e), $e->getMessage()), null, $e);
+                sprintf("Exception during authorization: [%s] %s", get_class($e), $e->getMessage()),
+                null,
+                $e
+            );
         }
-        
+
         try {
             $accessToken = $this->getAccessToken($authorizationCode);
         } catch (\Exception $e) {
             throw new Exception\TokenRequestException(
-                sprintf("Exception during token request: [%s] %s", get_class($e), $e->getMessage()), null, $e);
+                sprintf("Exception during token request: [%s] %s", get_class($e), $e->getMessage()),
+                null,
+                $e
+            );
         }
-        
+
         try {
             return $this->getUserInfo($accessToken);
         } catch (\Exception $e) {
             throw new Exception\UserInfoRequestException(
-                sprintf("Exception during user info request: [%s] %s", get_class($e), $e->getMessage()), null, $e);
+                sprintf("Exception during user info request: [%s] %s", get_class($e), $e->getMessage()),
+                null,
+                $e
+            );
         }
     }
 
@@ -123,7 +131,7 @@ class Basic extends AbstractFlow
         $tokenRequest->setClientInfo($this->getClientInfo());
         $tokenRequest->setCode($authorizationCode);
         $tokenRequest->setGrantType('authorization_code');
-        
+
         return $tokenRequest;
     }
 
@@ -139,7 +147,7 @@ class Basic extends AbstractFlow
         $userInfoRequest = new UserInfo\Request();
         $userInfoRequest->setClientInfo($this->getClientInfo());
         $userInfoRequest->setAccessToken($accessToken);
-        
+
         return $userInfoRequest;
     }
 }
