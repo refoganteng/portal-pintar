@@ -442,8 +442,6 @@ function findPesertaTambahan($dataagenda)
                         $teks = 'Hari Ini Weekend ...';
                     else
                         $teks = 'Semua Pegawai Hadir di Kantor Hari Ini ...';
-
-                    echo $teks; // Output the result
                     ?>
                     <div class="card-body">
                         <h4><em><?= $teks ?></em></h4>

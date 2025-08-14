@@ -22,6 +22,7 @@ use app\sso\SSOBPS;
 use DateTime;
 use DateTimeZone;
 use Exception;
+use JKD\SSO\Client\Provider\Keycloak;
 
 class SiteController extends Controller
 {
@@ -109,7 +110,7 @@ class SiteController extends Controller
                 ['>=', 'waktuselesai_tunda', $date->format('Y-m-d H:i:s')]
             ]);
         $dataProvider->sort->defaultOrder = ['waktumulai' => SORT_ASC];
-        
+
         // TAMPILKAN EOQ TW LALU
         $currentMonth = date("n");
         $currentYear = date("Y");
@@ -137,9 +138,9 @@ class SiteController extends Controller
             'dataProvider' => $dataProvider,
             'dataProviderMobil' => $dataProviderMobil,
             'dataProviderDl' => $dataProviderDl,
-            'tahun' => $targetYear, 
+            'tahun' => $targetYear,
             'triwulan' => $targetTriwulan,
-            'eoqdisplay'=>$eoqdisplay
+            'eoqdisplay' => $eoqdisplay
         ]);
     }
     public function actionLogin()
@@ -148,11 +149,12 @@ class SiteController extends Controller
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
+
         $sso = new SSOBPS();
         /* pakai OpenID*/
         $sso->setCredential(Yii::$app->params['ssoSatkerId'], Yii::$app->params['ssoSatkerKey']);
         $sso->setRedirectUri('http://localhost/portalpintar/site/login');
-        $sso->setRedirectUri(Yii::$app->params['webhostingSatker'] . 'portalpintar/site/login');
+        // $sso->setRedirectUri(Yii::$app->params['webhostingSatker'] . 'portalpintar/site/login');
         $model = new LoginForm();
         try {
             $post = Yii::$app->request->post();
@@ -170,7 +172,6 @@ class SiteController extends Controller
                             return $this->redirect('https://sso.bps.go.id/auth/realms/pegawai-bps/protocol/openid-connect/logout?redirect_uri=' . $loginurl);
                         }
                         Yii::$app->user->login($user_login);
-                        // Yii::$app->session['choicepegawai'] = true;
                         return $this->goBack();
                     } else {
                         Yii::$app->session->setFlash('error', "Maaf, Akun SSO tidak terdaftar dalam database Portal Pintar. Jika Anda menginginkan akses, silahkan input data Anda " .
@@ -192,7 +193,12 @@ class SiteController extends Controller
                 $model->addError('username', 'Username atau Password salah');
             }
         } catch (Exception $e) {
-            $model->addError('username', 'Terjadi kesalahan pada SSO. Mohon coba beberapa saat lagi atau hubungi nofriani@bps.go.id.');
+            echo 'Error: ' . $e->getMessage() . '<br>';
+            echo 'File: ' . $e->getFile() . '<br>';
+            echo 'Line: ' . $e->getLine() . '<br>';
+            echo '<pre>' . $e->getTraceAsString() . '</pre>';
+            exit;
+            // $model->addError('username', 'Terjadi kesalahan pada SSO. Mohon coba beberapa saat lagi atau hubungi nofriani@bps.go.id.',);
         }
         return $this->render('login', [
             'model' => $model,

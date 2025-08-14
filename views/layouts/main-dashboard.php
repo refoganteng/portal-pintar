@@ -52,7 +52,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     <section id="hero" class="d-flex flex-column justify-content-center">
         <div class="container" data-aos="zoom-in" data-aos-delay="100">
             <h1>PORTAL PINTAR - TODAY INFO</h1>
-            <p>P A D E K | <span class="typed" data-typed-items="PROFESIONAL DAN BERAKHLAK"></p>
+            <p>C A K E P | <span class="typed" data-typed-items="Cerdas, Kreatif, Produktif"></p>
         </div>
     </section><!-- End Hero -->
     <main id="main">
